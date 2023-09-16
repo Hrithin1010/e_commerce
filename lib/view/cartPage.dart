@@ -10,42 +10,18 @@ class Cart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cartList = context.watch<dataProvider>().carts;
-
     num totalamount = 0;
     for (var item in cartList) {
       totalamount += (item.price! * item.count);
     }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "Cart",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Wrap(
-              children: [
-                Text(
-                  "Total Products- ",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20),
-                ),
-                Text(
-                  "${cartList.length}",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20),
-                )
-              ],
-            ),
-          )
-        ],
-        backgroundColor: Color.fromARGB(255, 10, 59, 99),
+        backgroundColor: Color(0xFF11334B),
       ),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
@@ -55,15 +31,12 @@ class Cart extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 600,
-                width: double.infinity,
+                height: 580,
                 child: ListView.builder(
                     itemCount: cartList.length,
                     itemBuilder: (context, index) {
                       var item = cartList[index];
                       totalamount = (item.price! * item.count) + totalamount;
-                      //final cart_products = cartList[index];
-
                       return Card(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,7 +46,7 @@ class Cart extends StatelessWidget {
                               children: [
                                 Container(
                                   padding: EdgeInsets.all(10),
-                                  height: 100,
+                                  height: 90,
                                   width: 80,
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
@@ -89,71 +62,115 @@ class Cart extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                        width: 150,
+                                        width: 250,
+                                        height: 50,
                                         child: Text(
                                           item.title!,
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 20,
                                               fontWeight: FontWeight.bold),
                                         )),
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    Text(
-                                      "\$${item.price.toString()}",
-                                      style: TextStyle(fontSize: 15),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 3, bottom: 6),
+                                      child: Text(
+                                        "\$${item.price.toString()}",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 50),
+                                      child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.green,
+                                          ),
+                                          child: Text(
+                                            "Buy Now",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          )),
                                     ),
                                   ],
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              width: 3,
-                            ),
-                            Wrap(
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.brown,
-                                  child: Icon(
-                                    Icons.remove,
-                                    color: Colors.white,
-                                  ),
-                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 3, right: 3, top: 5),
-                                  child: Text(
-                                    "1",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
+                                      bottom: 45, left: 50),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      context
+                                          .read<dataProvider>()
+                                          .removefromCart(item);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Successfully deleted")));
+                                    },
+                                    icon: Icon(
+                                      Icons.delete_outline_outlined,
+                                      size: 30,
+                                      color: Colors.red,
+                                    ),
                                   ),
-                                  
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<dataProvider>().addItem(product.id.toString(),product.title.toString());
-                                  },
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.brown,
-                                    child: Icon(Icons.add,color: Colors.white,),
-                                  ),
-                                )
+                                Wrap(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Provider.of<dataProvider>(context,
+                                                listen: false)
+                                            .decrementItem(item);
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Color(0xFF11334B),
+                                        child: Icon(
+                                          Icons.remove,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 3, right: 3, top: 5),
+                                      child: Text(
+                                        item.count.toString(),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Provider.of<dataProvider>(context,
+                                                listen: false)
+                                            .addItem(item);
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Color(0xFF11334B),
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ],
                             ),
-                            SizedBox(width: 3,),
-                            IconButton(
-                              onPressed: () {
-                                context
-                                    .read<dataProvider>()
-                                    .removefromCart(item);
-                              },
-                              icon: Icon(
-                                Icons.delete,
-                                size: 20,
-                                color: Colors.black,
-                              ),
-                            )
                           ],
                         ),
                       );
@@ -162,9 +179,9 @@ class Cart extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Container(
-                  height: 100,
+                  height: 90,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 105, 172, 226),
+                      color: Color(0xFF11334B),
                       borderRadius: BorderRadius.circular(15)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,12 +198,9 @@ class Cart extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
                             ),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            // ${totalamount.toString()}
+                            //
                             Text(
-                              "${totalamount.toString()}",
+                              "\$ ${totalamount.toString()}",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -199,10 +213,13 @@ class Cart extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: ElevatedButton(
                           onPressed: () {},
-                          child: Text("Pay Now"),
+                          child: Text(
+                            "Pay Now",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
-                                  Color.fromARGB(255, 77, 208, 82))),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Colors.green)),
                         ),
                       )
                     ],

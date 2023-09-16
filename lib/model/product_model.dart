@@ -3,13 +3,9 @@
 //     final productModel = productModelFromJson(jsonString);
 
 import 'dart:convert';
+List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(json.decode(str).map((x) => ProductModel.fromJson(x)));
 
-//str - data from service, convert all data to list of map, here x - is the value to .fromjson class
-List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(
-    json.decode(str).map((x) => ProductModel.fromJson(x)));
-
-String productModelToJson(List<ProductModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String productModelToJson(List<ProductModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ProductModel {
   int? id;
@@ -20,6 +16,7 @@ class ProductModel {
   String? image;
   Rating? rating;
   int count;
+  int quantity;
 
   ProductModel({
     this.id,
@@ -30,39 +27,29 @@ class ProductModel {
     this.image,
     this.rating,
     this.count=1,
+    this.quantity =1,
   });
 //x = json
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
-        id: json["id"],
-        title: json["title"],
-        price: json["price"].toDouble(),
-        description: json["description"],
-        category: json['category'],
-        image: json["image"],
-        rating: Rating.fromJson(json["rating"]),
-      );
+    id: json["id"],
+    title: json["title"],
+    price: json["price"].toDouble(),
+    description: json["description"],
+    category: json['category'],
+    image: json["image"],
+    rating: Rating.fromJson(json["rating"]),
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-        "price": price,
-        "description": description,
-        "category": category,
-        "image": image,
-        "rating": rating?.toJson(),
-      };
+    "id": id,
+    "title": title,
+    "price": price,
+    "description": description,
+    "category": category,
+    "image": image,
+    "rating": rating?.toJson(),
+  };
 }
-
-///this is only need
-//enum Category { MEN_S_CLOTHING, JEWELERY, ELECTRONICS, WOMEN_S_CLOTHING }
-//
-// final categoryValues = EnumValues({
-//   "electronics": Category.ELECTRONICS,
-//   "jewelery": Category.JEWELERY,
-//   "men's clothing": Category.MEN_S_CLOTHING,
-//   "women's clothing": Category.WOMEN_S_CLOTHING
-// });
-
 class Rating {
   double? rate;
   int? count;
@@ -73,14 +60,14 @@ class Rating {
   });
 
   factory Rating.fromJson(Map<String, dynamic> json) => Rating(
-        rate: json["rate"].toDouble(),
-        count: json["count"],
-      );
+    rate: json["rate"].toDouble(),
+    count: json["count"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "rate": rate,
-        "count": count,
-      };
+    "rate": rate,
+    "count": count,
+  };
 }
 
 class EnumValues<T> {
