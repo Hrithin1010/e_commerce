@@ -8,7 +8,7 @@ class httpService {
     var responce = await http.get(Uri.parse("https://fakestoreapi.com/products"));
     
     if(responce.statusCode == 200){
-      var data = responce.body;   //store the entire body of responce to a variable
+      var data = responce.body;   
       return productModelFromJson(data);
     }else{
       throw Exception();
